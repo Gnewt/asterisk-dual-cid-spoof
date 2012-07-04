@@ -9,9 +9,13 @@ from os import rename
 from time import sleep
 import sys
 
+# --------------- change the following ---------------
 # Change this to the number of your conference room,
 # defined in meetme.conf.
 CONFNUM = 1234
+# Change this to your outgoing SIP trunk's name.
+SIPTRUNK = "flowroute"
+# --------------- end user changes -------------------
 
 def write(stuff):
     """Writes something to the AGI interface (and to stderr)."""
@@ -25,15 +29,15 @@ def stream(file):
 
 def make_call_files(num1, num2):
     """Makes the two call files in /tmp, then moves to asterisk's spool directory."""
-    callfile_buffer = """Channel: SIP/flowroute/1{0}
-CallerID: "" <{1}>
+    callfile_buffer = """Channel: SIP/{0}/1{1}
+CallerID: "" <{2}>
 Application: MeetMe
-Data: {2},q
+Data: {3},q
 """
     file1 = open("/tmp/dualcall-1.call","w")
     file2 = open("/tmp/dualcall-2.call","w")
-    file1.write(callfile_buffer.format(num1, num2, CONFNUM))
-    file2.write(callfile_buffer.format(num2, num1, CONFNUM))
+    file1.write(callfile_buffer.format(SIPTRUNK, num1, num2, CONFNUM))
+    file2.write(callfile_buffer.format(SIPTRUNK, num2, num1, CONFNUM))
     file1.close()
     file2.close()
     rename("/tmp/dualcall-1.call", "/var/spool/asterisk/outgoing/dualcall-1.call")
