@@ -32,7 +32,7 @@ def make_call_files(num1, num2):
     callfile_buffer = """Channel: SIP/{0}/1{1}
 CallerID: "" <{2}>
 Application: MeetMe
-Data: {3},q
+Data: {3},xq
 """
     file1 = open("/tmp/dualcall-1.call","w")
     file2 = open("/tmp/dualcall-2.call","w")
@@ -48,6 +48,6 @@ if __name__ == "__main__":
         make_call_files(sys.argv[1], sys.argv[2])
         stream("agent-loginok")
         sleep(2)
-        write("EXEC MeetMe \"{0}|saq\"".format(CONFNUM))
+        write("EXEC MeetMe \"{0},samqA\"".format(CONFNUM))
         write("HANGUP")
 
